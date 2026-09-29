@@ -1,0 +1,22 @@
+{
+  "$schema": "https://cloud.modelence.com/schema/modelence.config.json?version=1",
+  "resources": {
+    "app": {
+      "type": "service",
+      // Meteor 3.5 runs on Node 24
+      "image": "node-24-slim",
+      "build": {
+        "commands": [
+          // argon2 (used by accounts-password) compiles from source during meteor build
+          "apt-get update && apt-get install -y --no-install-recommends python3 make g++ && rm -rf /var/lib/apt/lists/*",
+          // the slim image has no curl, so install Meteor through its npm installer
+          "npx -y meteor@3.5.2",
+          "METEOR_ALLOW_SUPERUSER=1 $HOME/.meteor/meteor npm ci",
+          "METEOR_ALLOW_SUPERUSER=1 DISABLE_CLIENT_STATS=true METEOR_DISABLE_OPTIMISTIC_CACHING=1 $HOME/.meteor/meteor build --directory /tmp/meteor-build --server-only",
+          "cd /tmp/meteor-build/bundle/programs/server && npm install --omit=dev"
+        ]
+      },
+      "start": { "commands": ["node /tmp/meteor-build/bundle/main.js"] }
+    }
+  }
+}

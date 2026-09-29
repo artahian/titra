@@ -1,0 +1,8 @@
+{
+  "deploy": {
+    "environmentId": "6abaf19d4c71bfd47e6d52f4",
+    "appAlias": "titra-test-muluor1891j",
+    "envAlias": "prod"
+  },
+  "appId": "6abaf17d4c71bfd47e6d52ec"
+}
